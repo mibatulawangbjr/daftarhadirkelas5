@@ -1,74 +1,87 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Presensi - Sakit, Izin, Alfa</title>
+    <title>Presensi Siswa - MI BATULAWANG</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 20px; background-color: #f0f2f5; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h2 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 10px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background-color: #f4f7f6; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         
-        /* Form Styling */
-        .form-group { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-        select, button { padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; }
-        .btn-simpan { background-color: #1a73e8; color: white; border: none; font-weight: bold; cursor: pointer; }
-        .btn-simpan:hover { background-color: #1557b0; }
+        /* Header Logo Styling */
+        .header-school { text-align: center; margin-bottom: 25px; }
+        .header-school img { width: 100px; height: auto; }
+        .header-school h2 { color: #2c3e50; margin: 10px 0 0 0; font-size: 22px; }
+        .header-school p { margin: 5px 0; color: #555; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .line-deco { height: 4px; background: #27ae60; width: 60px; margin: 10px auto; border-radius: 2px; }
+
+        .form-section { background: #f0f9f4; padding: 20px; border-radius: 8px; margin-bottom: 30px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; border-left: 5px solid #27ae60; }
+        select, button { padding: 12px; border-radius: 6px; border: 1px solid #bdc3c7; font-size: 15px; }
         
-        /* Export Button */
-        .btn-export { background-color: #1d6f42; color: white; border: none; margin-bottom: 10px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-        .btn-export:hover { background-color: #145532; }
+        .btn-save { background-color: #27ae60; color: white; border: none; font-weight: bold; cursor: pointer; }
+        .btn-save:hover { background-color: #219150; }
+        
+        .btn-export { background-color: #1d6f42; color: white; border: none; margin-bottom: 15px; cursor: pointer; font-weight: bold; padding: 10px 20px; border-radius: 4px; }
 
-        /* Table Styling */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        th { background-color: #f1f3f4; color: #333; }
-        .status-hadir { color: green; font-weight: bold; }
-        .status-sakit { color: orange; font-weight: bold; }
-        .status-izin { color: blue; font-weight: bold; }
-        .status-alfa { color: red; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+        th { background-color: #2c3e50; color: white; }
 
-        /* Tab System */
         .tabs { display: flex; gap: 5px; margin-top: 20px; }
-        .tab-btn { background: #dadce0; color: #3c4043; border: none; cursor: pointer; padding: 10px 20px; border-radius: 8px 8px 0 0; }
-        .tab-btn.active { background: #1a73e8; color: white; }
-        .tab-content { display: none; padding: 20px; border: 1px solid #ddd; background: white; border-radius: 0 8px 8px 8px; }
+        .tab-btn { background: #ecf0f1; border: 1px solid #ccc; cursor: pointer; padding: 12px 25px; border-radius: 8px 8px 0 0; }
+        .tab-btn.active { background: #27ae60; color: white; border-color: #27ae60; }
+        .tab-content { display: none; padding: 20px; border: 1px solid #ddd; border-radius: 0 8px 8px 8px; background: white; }
         .tab-content.active { display: block; }
+
+        .status-hadir { color: #27ae60; font-weight: bold; }
+        .status-sakit { color: #f39c12; font-weight: bold; }
+        .status-izin { color: #2980b9; font-weight: bold; }
+        .status-alfa { color: #c0392b; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>INPUT DAFTAR HADIR SISWA KELAS 5 MI BATULAWANG KOTA BANJAR</h2>
+    <div class="header-school">
+        <img src="logo.png" alt="Logo YBU Al-Mansyur">
+        <h2>MADRASAH IBTIDAIYAH BATULAWANG</h2>
+        <p>DS. KARYAMUKTI KEC. PATARUMAN KOTA BANJAR</p>
+        <div class="line-deco"></div>
+    </div>
     
-    <div class="form-group">
+    <div class="form-section">
+        <label><b>Nama Siswa:</b></label>
         <select id="namaSiswa">
+            <option value="">-- Pilih Nama Siswa --</option>
             <option value="ANDIKA">ANDIKA</option>
-			<option value="AULIA NUR LATIPAH">AULIA NUR LATIPAH</option>
-			<option value="ALIF FATHURROHMAN KUSMAYADI">ALIF FATHURROHMAN KUSMAYADI</option>
-			<option value="CAKRA GUMILANG">CAKRA GUMILANG</option>
-			<option value="CANTIKA NAURA MAULIDA">CANTIKA NAURA MAULIDA</option>
-			<option value="DEDE YUSRIL ZAELANI">DEDE YUSRIL ZAELANI</option>
-			<option value="ERIL IRWANSYAH">ERIL IRWANSYAH</option>
-			<option value="GANDI LATIFATUL KHOFI">GANDI LATIFATUL KHOFI</option>
-			<option value="HAFIZA SALSABILA">HAFIZA SALSABILA</option>
-			<option value="HEXA ADITYA PUTRA">HEXA ADITYA PUTRA</option>
+            <option value="AULIA NUR LATIPAH">AULIA NUR LATIPAH</option>
+            <option value="AZKA YUDISTIRA">AZKA YUDISTIRA</option>
+            <option value="Alif Fathurrohman Kusmayadi">Alif Fathurrohman Kusmayadi</option>
+            <option value="CAKRA GUMILANG">CAKRA GUMILANG</option>
+            <option value="CANTIKA NAURA MAULIDA">CANTIKA NAURA MAULIDA</option>
+            <option value="DEDE YUSRIL ZAELANI">DEDE YUSRIL ZAELANI</option>
+            <option value="ERIL IRWANSYAH">ERIL IRWANSYAH</option>
+            <option value="GANDI LATIFATUL KHOFI">GANDI LATIFATUL KHOFI</option>
+            <option value="HAFIZA SALSABILA">HAFIZA SALSABILA</option>
+            <option value="HEXA ADITYA PUTRA">HEXA ADITYA PUTRA</option>
             <option value="INDADARI PUTRI DAMARA">INDADARI PUTRI DAMARA</option>
             <option value="IRHAM FAUZI">IRHAM FAUZI</option>
-			<option value="LAURA PUTRI ANJANI">LAURA PUTRI ANJANI</option>
-			<option value="NAILA MUAZAHRA ARIFIN">NAILA MUAZAHRA ARIFIN</option>
-			<option value="RAINA CEUCEU PEBRIANI">RAINA CEUCEU PEBRIANI</option>
-			<option value="RANIA KHUMAIRAH">RANIA KHUMAIRAH</option>
-			<option value="RAYA AGUSTIN">RAYA AGUSTIN</option>
-			<option value="SAQILLA AZAHRA">SAQILLA AZAHRA</option>
-			<option value="SYIFA NURFADILAH">SYIFA NURFADILAH</option>
-			<option value="WIDA WATI">WIDA WATI</option>
-			<option value="ZALFA NAQIYA AKHYAR">ZALFA NAQIYA AKHYAR</option>
-			<option value="ZAMZAM KHOERUL ARIFIN">ZAMZAM KHOERUL ARIFIN</option>
-			<option value="ZERNIH NUR INDAH">ZERNIH NUR INDAH</option>
+            <option value="LAURA PUTRI ANJANI">LAURA PUTRI ANJANI</option>
+            <option value="NAILA MUAZAHRA ARIFIN">NAILA MUAZAHRA ARIFIN</option>
+            <option value="RAINA CEUCEU PEBRIANI">RAINA CEUCEU PEBRIANI</option>
+            <option value="RANIA KHUMAIRAH">RANIA KHUMAIRAH</option>
+            <option value="RAYA AGUSTIN">RAYA AGUSTIN</option>
+            <option value="SAQILLA AZAHRA">SAQILLA AZAHRA</option>
+            <option value="SYIFA NURFADILAH">SYIFA NURFADILAH</option>
+            <option value="WIDA WATI">WIDA WATI</option>
+            <option value="ZALFA NAQIYA AKHYAR">ZALFA NAQIYA AKHYAR</option>
+            <option value="ZAMZAM KHOERUL ARIFIN">ZAMZAM KHOERUL ARIFIN</option>
+            <option value="ZERNIH NUR INDAH">ZERNIH NUR INDAH</option>
         </select>
 
+        <label><b>Status:</b></label>
         <select id="statusAbsen">
             <option value="Hadir">Hadir</option>
             <option value="Sakit">Sakit</option>
@@ -76,155 +89,79 @@
             <option value="Alfa">Alfa</option>
         </select>
 
-        <button class="btn-simpan" onclick="tambahAbsen()">Catat Kehadiran</button>
+        <button class="btn-save" onclick="tambahAbsen()">CATAT KEHADIRAN</button>
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'mingguan')">Mingguan (Log)</button>
-        <button class="tab-btn" onclick="openTab(event, 'bulanan')">Bulanan (Rekap)</button>
-        <button class="tab-btn" onclick="openTab(event, 'semesteran')">Semesteran (Rekap)</button>
+        <button class="tab-btn active" onclick="openTab(event, 'mingguan')">Rekap Mingguan</button>
+        <button class="tab-btn" onclick="openTab(event, 'bulanan')">Rekap Bulanan</button>
+        <button class="tab-btn" onclick="openTab(event, 'semesteran')">Rekap Semesteran</button>
     </div>
 
-    <!-- Tab Mingguan (Log Detail) -->
     <div id="mingguan" class="tab-content active">
-        <button class="btn-export" onclick="exportExcel('tableMingguan', 'Log_Mingguan')">📂 Export Excel</button>
+        <button class="btn-export" onclick="exportExcel('tableMingguan', 'Mingguan_YBU')">💾 Export Excel</button>
         <table id="tableMingguan">
-            <thead>
-                <tr>
-                    <th>Waktu/Tanggal</th>
-                    <th>Nama</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Hari/Tanggal</th><th>Nama Siswa</th><th>Status</th></tr></thead>
             <tbody id="bodyMingguan"></tbody>
         </table>
     </div>
 
-    <!-- Tab Bulanan -->
     <div id="bulanan" class="tab-content">
-        <button class="btn-export" onclick="exportExcel('tableBulanan', 'Rekap_Bulanan')">📂 Export Excel</button>
+        <button class="btn-export" onclick="exportExcel('tableBulanan', 'Bulanan_YBU')">💾 Export Excel</button>
         <table id="tableBulanan">
-            <thead>
-                <tr>
-                    <th>Nama Siswa</th>
-                    <th>Hadir</th>
-                    <th>Sakit</th>
-                    <th>Izin</th>
-                    <th>Alfa</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Nama Siswa</th><th>Hadir</th><th>Sakit</th><th>Izin</th><th>Alfa</th></tr></thead>
             <tbody id="bodyBulanan"></tbody>
         </table>
     </div>
 
-    <!-- Tab Semesteran -->
     <div id="semesteran" class="tab-content">
-        <button class="btn-export" onclick="exportExcel('tableSemesteran', 'Rekap_Semesteran')">📂 Export Excel</button>
+        <button class="btn-export" onclick="exportExcel('tableSemesteran', 'Semesteran_YBU')">💾 Export Excel</button>
         <table id="tableSemesteran">
-            <thead>
-                <tr>
-                    <th>Nama Siswa</th>
-                    <th>Hadir</th>
-                    <th>Sakit</th>
-                    <th>Izin</th>
-                    <th>Alfa</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Nama Siswa</th><th>Hadir</th><th>Sakit</th><th>Izin</th><th>Alfa</th></tr></thead>
             <tbody id="bodySemesteran"></tbody>
         </table>
     </div>
 </div>
 
 <script>
+    // Script JavaScript tetap sama dengan sebelumnya
     let dbAbsensi = [];
-
     function tambahAbsen() {
         const nama = document.getElementById('namaSiswa').value;
         const status = document.getElementById('statusAbsen').value;
-        
-        if (!nama) {
-            alert("Silakan pilih nama terlebih dahulu!");
-            return;
-        }
-
+        if (!nama) { alert("Pilih nama siswa!"); return; }
         const sekarang = new Date();
         const tglString = sekarang.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        const waktuString = sekarang.toLocaleTimeString('id-ID');
-
-        const dataBaru = {
-            nama: nama,
-            status: status,
-            tanggal: tglString,
-            waktu: waktuString
-        };
-
-        dbAbsensi.push(dataBaru);
+        dbAbsensi.push({ nama, status, tanggal: tglString });
         renderData();
-        alert(`Berhasil mencatat: ${nama} (${status})`);
     }
 
     function renderData() {
-        const bodyMingguan = document.getElementById('bodyMingguan');
-        const bodyBulanan = document.getElementById('bodyBulanan');
-        const bodySemesteran = document.getElementById('bodySemesteran');
-
-        bodyMingguan.innerHTML = "";
-        bodyBulanan.innerHTML = "";
-        bodySemesteran.innerHTML = "";
-
-        // Objek untuk menampung hitungan (rekap)
+        const bodies = { mingguan: document.getElementById('bodyMingguan'), bulanan: document.getElementById('bodyBulanan'), semesteran: document.getElementById('bodySemesteran') };
+        Object.values(bodies).forEach(b => b.innerHTML = "");
         let rekap = {};
-
         dbAbsensi.forEach(item => {
-            // Render Log Mingguan
-            let kls = "status-" + item.status.toLowerCase();
-            bodyMingguan.innerHTML += `
-                <tr>
-                    <td>${item.tanggal} <br> <small>${item.waktu}</small></td>
-                    <td>${item.nama}</td>
-                    <td class="${kls}">${item.status}</td>
-                </tr>`;
-            
-            // Inisialisasi rekap jika nama belum ada
-            if (!rekap[item.nama]) {
-                rekap[item.nama] = { Hadir: 0, Sakit: 0, Izin: 0, Alfa: 0 };
-            }
-            // Tambah hitungan sesuai status
+            bodies.mingguan.innerHTML += `<tr><td>${item.tanggal}</td><td>${item.nama}</td><td class="status-${item.status.toLowerCase()}">${item.status}</td></tr>`;
+            if (!rekap[item.nama]) rekap[item.nama] = { Hadir: 0, Sakit: 0, Izin: 0, Alfa: 0 };
             rekap[item.nama][item.status]++;
         });
-
-        // Render Tab Bulanan & Semesteran (format sama)
-        for (let nama in rekap) {
-            let row = `
-                <tr>
-                    <td style="text-align:left">${nama}</td>
-                    <td>${rekap[nama].Hadir}</td>
-                    <td>${rekap[nama].Sakit}</td>
-                    <td>${rekap[nama].Izin}</td>
-                    <td>${rekap[nama].Alfa}</td>
-                </tr>`;
-            bodyBulanan.innerHTML += row;
-            bodySemesteran.innerHTML += row;
+        for (let n in rekap) {
+            let row = `<tr><td style="text-align:left">${n}</td><td>${rekap[n].Hadir}</td><td>${rekap[n].Sakit}</td><td>${rekap[n].Izin}</td><td>${rekap[n].Alfa}</td></tr>`;
+            bodies.bulanan.innerHTML += row; bodies.semesteran.innerHTML += row;
         }
     }
 
-    function openTab(evt, tabName) {
+    function openTab(evt, name) {
         let contents = document.getElementsByClassName("tab-content");
         let buttons = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < contents.length; i++) {
-            contents[i].classList.remove("active");
-            buttons[i].classList.remove("active");
-        }
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.add("active");
+        for (let i = 0; i < contents.length; i++) { contents[i].classList.remove("active"); buttons[i].classList.remove("active"); }
+        document.getElementById(name).classList.add("active"); evt.currentTarget.classList.add("active");
     }
 
-    function exportExcel(tableID, filename) {
-        const table = document.getElementById(tableID);
-        const wb = XLSX.utils.table_to_book(table, { sheet: "Data" });
-        XLSX.writeFile(wb, `${filename}.xlsx`);
+    function exportExcel(id, name) {
+        const wb = XLSX.utils.table_to_book(document.getElementById(id), { sheet: "Rekap" });
+        XLSX.writeFile(wb, `${name}.xlsx`);
     }
 </script>
-
 </body>
 </html>
